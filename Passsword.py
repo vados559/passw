@@ -1,9 +1,20 @@
+import inline # библиотека для изменения input
 def AdminAbil():
     while True:
         pass
-def UserAbil(nick):
-    while True:
-        pass
+def UserAbil(nick, password):
+    choice = input("Функции:\n1.Сменить пароль\n>>")
+    if choice == 1:
+        for i in range(3):
+            check = input2("Введите старый пароль: ")
+            if password == check:
+                pass # НАПИСАТЬ ЗАМЕНУ ПАРОЛЯ ПОЛЬЗОВАТЕЛЯ В ФАЙЛЕ
+            else:
+                print("Неверный пароль, попробуйте снова.\n")
+
+
+        
+
 
 path = 'C:/Users/ilyxa/OneDrive/Desktop/passw/users.txt'
 bd = open(path, 'r')
@@ -16,7 +27,8 @@ for i in range(len(lines)): # цикл для подгрузки пользов�
 nick = input("Имя пользователя: ")
 if nick == users[0][0]:
     for i in range(3):
-        password = input("Пароль:")
+        input2 = inline.input
+        password = input2("Пароль:", secret = True) 
         if password == users[0][1]:
             AdminAbil()
         else:
@@ -24,12 +36,14 @@ if nick == users[0][0]:
 else:
     for i in users:
         if nick == i[0]:
-            for i in range(3):
-                password = input("Пароль:")
+            for j in range(3):
+                input2 = inline.input
+                password = input2("Пароль:", secret = True)
                 if password == i[1]:
-                    UserAbil()
+                    UserAbil(nick, password)
                 else:
-                    print("Неверный пароль, попробуйте снова.")
+                    print("Неверный пароль, попробуйте снова.\n")
+
 
 
     
