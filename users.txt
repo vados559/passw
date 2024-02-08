@@ -1,4 +1,4 @@
 admin 1234
-vad 4321
+vad 123
+pol 1111
 loot 0000
-Pol 1111
