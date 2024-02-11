@@ -1,18 +1,19 @@
 import inline # библиотека для изменения input
-def AdminAbil(nick, password, users, path):
+import re
+def AdminAbil(nick, password, users, path): # функции администратора
     while True:
         choice = int(input("Функции:\n1.Сменить пароль\n2.Список пользвоателей\n3.Добавить пользователя\n4.Заблокировать пользователя\n5.Ограничение на выбираемые пароли\n6.Завершить работу\n>> "))
-        if choice == 1:
+        if choice == 1: # смена пароля
             ChangePassword(nick, password, users, path)
-        elif choice == 2:
+        elif choice == 2: # вывод списка пользователей
             for i in users:
                 print(f"Имя: {i}\t Пароль: {users[i][0]}\t Блокировка: {'YES' if users[i][1] == '1' else 'NO'}\t Ограничения на пароль: {'YES' if users[i][2] == '1' else 'NO'} \n")
-        elif choice == 3:
+        elif choice == 3: # добавление нового пользователя
             username = input("Введите имя пользователя: ")
             users[username] = ["0", "0", "0"]
             Refresh_db(path, users) # сохранение изменений
-        elif choice == 4:
-            for i in  users:
+        elif choice == 4: # блокировка пользователя
+            for i in  users: # список имен существующих пользователей
                 print(i+"\n")
             username = input("Введите имя пользователя: ")
             if username in users:
@@ -21,7 +22,7 @@ def AdminAbil(nick, password, users, path):
                 print("Пользователь заблокирван!\n")
             else:
                 print("Пользователь с указанным именем не найден!\n")
-        elif choice == 5:
+        elif choice == 5: # установка ограничений на пароль
             for i in  users:
                 print(i+"\n")
             username = input("Введите имя пользователя: ")
@@ -31,22 +32,35 @@ def AdminAbil(nick, password, users, path):
                 print("Ограничения установлены!\n")
             else:
                 print("Пользователь с указанным именем не найден!\n")
-        elif choice == 6:
+        elif choice == 6: # завершение работы
             exit(1)
-
-        
-    
-def UserAbil(nick, password, users, path):
+   
+def UserAbil(nick, password, users, path): # функции польззователя
     choice = int(input("Функции:\n1.Сменить пароль\n>> "))
     if choice == 1:
         ChangePassword(nick, password, users, path)
     exit(1)
         
-def ChangePassword(nick, password, users, path):
+def ChangePassword(nick, password, users, path): # функция смены пароля
+    pattern = "r(?=.*[а-яА-Яa-zA-Z])(?=.*[,.!?])" # регулярное выражение для пароля
     for i in range(3):
         check = input2("Введите старый пароль: ", secret=True)
         if password == check: # подтверждение пароля
-            password = input2("Введите новый пароль: ", secret=True)
+            if users[nick][2] == "1": # проверка на ограничение на ввода пароля
+                while True: 
+                    print("Пароль должен содержать буквы и знаки препинания(, . ! ?).\n")
+                    password = input2("Введите новый пароль: ", secret=True)
+                    if re.search(pattern, password):
+                        break
+                    else:
+                        print("Пароль не удоволетворяет требованиям.\n1. Завершить работу\n2. Оставить старый пароль\n3. Продолжить\n")
+                        choice = int(input(">> "))
+                        if choice == 1:
+                            exit(1)
+                        elif choice == 2:
+                            return
+            else:
+                password = input2("Введите новый пароль: ", secret=True)
             users[nick][0] = password # обновление пароля в словаре
             Refresh_db(path, users) # сохранение изменений
             print("Пароль успешно сменен!")
@@ -61,15 +75,11 @@ def Refresh_db(path, users): #функция для обновления дан�
         bd.write(f"{i} {users[i][0]} {users[i][1]} {users[i][2]}\n")
     bd.close()
 
-        
-
-
 path = 'C:/Users/ilyxa/OneDrive/Desktop/passw/users.txt'
 bd = open(path, 'r')
 lines = bd.readlines()
 bd.close()
 users = {} # словарь для хранения имен и паролей пользователей
-
 for i in range(len(lines)): # цикл для подгрузки пользователей в программу
     username, password, block, limit = lines[i].split()
     users[username] = [password, block, limit] 
