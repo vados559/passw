@@ -1,5 +1,6 @@
 import inline # библиотека для изменения input
 import re
+import os
 def AdminAbil(nick, password, users, path): # функции администратора
     while True:
         choice = int(input("Функции:\n1.Сменить пароль\n2.Список пользвоателей\n3.Добавить пользователя\n4.Заблокировать пользователя\n5.Ограничение на выбираемые пароли\n6.Завершить работу\n>> "))
@@ -75,7 +76,8 @@ def Refresh_db(path, users): #функция для обновления дан�
         bd.write(f"{i} {users[i][0]} {users[i][1]} {users[i][2]}\n")
     bd.close()
 
-path = 'C:/Users/ilyxa/OneDrive/Desktop/passw/users.txt'
+current_directory = os.path.dirname(__file__) # определение пути к каталогу в котором находится скрипт и текстовый файл
+path = os.path.join(current_directory, 'users.txt')
 bd = open(path, 'r')
 lines = bd.readlines()
 bd.close()
