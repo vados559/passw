@@ -7,6 +7,24 @@ from tkinter.messagebox import showerror # для показа окна с ош�
 WrongPassA = 0 # Число неверых вводов пароля админа
 WrongPassU = 0 # Число неверых вводов пароля пользователя
 
+def encryption(users): # шифрование паролей шифром цезаря
+    key = 3
+    for i in users:
+        EncPass = ""
+        for j in list(users[i][0]):
+            EncPass += chr(ord(j) + key)
+        users[i][0] = EncPass
+    return users
+
+def decode(users): # дешефровка паролей
+    key = 3
+    for i in users:
+        EncPass = ""
+        for j in list(users[i][0]):
+            EncPass += chr(ord(j) - key)
+        users[i][0] = EncPass
+    return users
+
 def AdminAbil(nick, password, users, path): # функции администратора
     WindowAdmin = Tk()
     WindowAdmin.title("Здравствуйте, Администартор")
@@ -124,6 +142,7 @@ def ChangePassword(nick, password, check, users, path, password_new, Window): # 
 
 def Refresh_db(path, users): #функция для обновления данных в файле
     bd = open(path, 'w+')
+    users = encryption(users) # шифрование паролей
     for i in users: # обновление данных в файле
         bd.write(f"{i} {users[i][0]} {users[i][1]} {users[i][2]}\n")
     bd.close()
@@ -139,6 +158,7 @@ def entry():
     for i in range(len(lines)): # цикл для подгрузки пользователей в программу
         username, password, block, limit = lines[i].split()
         users[username] = [password, block, limit]
+    users = decode(users) # дешифровка паролей
     
     nick = EntrNick.get() # получение никнейма пользователя из поля ввода
     password = EntrPassword.get() # получение пароля пользователя из поля ввода
