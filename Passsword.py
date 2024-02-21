@@ -1,5 +1,5 @@
-import re
-import os
+import re # для регулярных выражений
+import os # для динамического определения пути к файлу
 from tkinter import * # для создания главного окна
 from tkinter import ttk # для виджетов (кнопок, полей и т.д.)
 from tkinter.messagebox import showerror # для показа окна с ошибкой
@@ -151,7 +151,7 @@ def entry():
     current_directory = os.path.dirname(__file__) # определение пути к каталогу в котором находится скрипт и текстовый файл
     path = os.path.join(current_directory, 'users.txt')
     bd = open(path, 'r')
-    lines = bd.readlines() # занесение данных из файла в программу
+    lines = bd.readlines() #занесение данных из файла в программу
     bd.close()
 
     users = {} # словарь для хранения имен и паролей пользователей
